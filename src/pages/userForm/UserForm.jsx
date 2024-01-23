@@ -54,38 +54,52 @@ export default function UserForm() {
   };
 
   return (
-    <div className="formContainer">
-      <Formik
-        initialValues={formData}
-        validationSchema={currentValidationSchema}
-        onSubmit={handleSubmit}
-        enableReinitialize
-      >
-        {({ isSubmitting, isValid }) => (
-          <Form>
-            {step === 0 && <Step1 />}
-            {step === 1 && <Step2 />}
-            {step === 2 && <Step3 />}
+    <>
+      <div className="formContainer">
+        <Formik
+          initialValues={formData}
+          validationSchema={currentValidationSchema}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ isSubmitting, isValid }) => (
+            <Form>
+              {step === 0 && <Step1 />}
+              {step === 1 && <Step2 />}
+              {step === 2 && <Step3 />}
 
-            <div className="buttonGroup">
-              <button type="button" onClick={handleBack} disabled={step === 0} className="button">
-                Back
-              </button>
-              <button type="submit" disabled={isSubmitting} className="button">
-                Save
-              </button>
-              <button
-                type="submit"
-                disabled={step === 2 || !isValid || isSubmitting}
-                className="button"
-              >
-                Save and Next
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+              <div className="buttonGroup">
+                <button type="button" onClick={handleBack} disabled={step === 0} className="button">
+                  Back
+                </button>
+                <button type="submit" disabled={isSubmitting} className="button">
+                  Save
+                </button>
+                <button
+                  type="submit"
+                  disabled={step === 2 || !isValid || isSubmitting}
+                  className="button"
+                >
+                  Save and Next
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+
+      {/* This button is placed intentionally to navigate user to Seat Booking page. This was not mentioned
+      in the task  */}
+
+      <div className="formContainer mt-50 flex items-center justify-center">
+        <button
+          className="mt-10 flex items-center justify-center rounded bg-blue-400 px-2 py-1 text-sm text-white"
+          onClick={() => navigate("/seat-booking")}
+        >
+          Go to Seat Booking
+        </button>
+      </div>
+    </>
   );
 }
 
