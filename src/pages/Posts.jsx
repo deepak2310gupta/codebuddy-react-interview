@@ -1,40 +1,61 @@
-import { Icon } from "@iconify/react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Posts = () => {
-  return (
-    <div className="rounded-lg bg-gray-50 p-7 text-gray-900 shadow-lg">
-      <h1 className="mb-7 text-4xl font-bold">Posts</h1>
-      <Link to="/" className="mb-4 flex items-center text-blue-600 hover:underline">
-        <Icon icon="mdi:arrow-left" className="mr-2" />
-        Back to Home
-      </Link>
+  const [userPostData, setUserPostData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-lg bg-white p-7 shadow-lg">
-          <h2 className="text-2xl font-bold">Post 1</h2>
-          <p className="text-gray-700">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo voluptatem, quibusdam,
-            quos, voluptatum voluptas quod quas voluptates quia doloribus nobis voluptatibus. Quam,
-            voluptate voluptatum. Quod, voluptate? Quisquam, voluptate voluptatum.
-          </p>
-        </div>
-        <div className="rounded-lg bg-white p-7 shadow-lg">
-          <h2 className="text-2xl font-bold">Post 2</h2>
-          <p className="text-gray-700">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo voluptatem, quibusdam,
-            quos, voluptatum voluptas quod quas voluptates quia doloribus nobis voluptatibus. Quam,
-            voluptate voluptatum. Quod, voluptate? Quisquam, voluptate voluptatum.
-          </p>
-        </div>
-        <div className="rounded-lg bg-white p-7 shadow-lg">
-          <h2 className="text-2xl font-bold">Post 3</h2>
-          <p className="text-gray-700">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo voluptatem, quibusdam,
-            quos, voluptatum voluptas quod quas voluptates quia doloribus nobis voluptatibus. Quam,
-            voluptate voluptatum. Quod, voluptate? Quisquam, voluptate voluptatum.
-          </p>
-        </div>
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("https://codebuddy.review/posts");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setUserPostData(data?.data);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) return <div className="container mx-auto p-4">Loading...</div>;
+  if (error) return <div className="container mx-auto p-4">Error: {error}</div>;
+
+  return (
+    <div className="container mx-auto p-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {userPostData?.map((post) => (
+          <div
+            key={post.id}
+            className="max-w-sm overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg"
+          >
+            <div style={{ height: "150px", overflow: "hidden" }}>
+              <img
+                className="h-full w-full object-cover"
+                src={post.image}
+                alt={`${post.firstName}'s post`}
+              />
+            </div>
+            <div className="px-6 py-4">
+              <div className="mb-2 text-xl font-bold text-indigo-700">{`${post.firstName} ${post.lastName}`}</div>
+              <p className="text-base text-gray-700">{post.writeup}</p>
+            </div>
+            <div className="flex items-center px-6 pb-2 pt-4">
+              <img
+                className="mr-4 h-10 w-10 rounded-full"
+                src={post.avatar}
+                alt={`${post.firstName} ${post.lastName}`}
+              />
+              <span className="text-sm font-semibold text-gray-800">{`${post.firstName} ${post.lastName}`}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
