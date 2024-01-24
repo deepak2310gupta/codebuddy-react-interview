@@ -6,7 +6,7 @@ export const formValidationSchemas = [
     password: Yup.string()
       .matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}/, "Password requirements not met")
       .required(
-        "Password Must contain minimum 2 capital letters, 2 small letter, 2 numbers and 2 special characters.",
+        "Password Must contain minimum 1 capital letters, 1 small letter, 1 digit and 1 special characters.",
       ),
   }),
   Yup.object({
